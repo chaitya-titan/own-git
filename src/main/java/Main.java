@@ -26,10 +26,10 @@ public class Main {
        }
        case "cat-file" -> {
          String plumbing = args[1];
-         if(plumbing.equals("-p")){
+         if(plumbing.equals("-p")) {
            String bob_sha = args[2];
 
-           String hash1 = bob_sha.substring(0,2);
+           String hash1 = bob_sha.substring(0, 2);
            String hash2 = bob_sha.substring(2);
 
            String filePath = ".git/objects/" + hash1 + "/" + hash2;
@@ -40,10 +40,20 @@ public class Main {
 
            System.out.print(line.substring(line.indexOf("\0") + 1));
 
-           while ((line = bufferedReader.readLine()) != null){
+           while ((line = bufferedReader.readLine()) != null) {
              System.out.print(line);
            }
+         }
+       }
+       case "hash-object" -> {
+         String plumbing = args[1];
+         if(plumbing.equals("-w")) {
+            String fileName = args[2];
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
 
+            String line = bufferedReader.readLine();
+
+           System.out.println(line);
          }
        }
        default -> System.out.println("Unknown command: " + command);
