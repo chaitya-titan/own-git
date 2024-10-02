@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.file.Files;
+import java.util.zip.InflaterInputStream;
 
 public class Main {
   public static void main(String[] args) throws IOException {
@@ -35,11 +36,11 @@ public class Main {
 
            String filePath = ".git/objects/" + hash1 + "/" + hash2;
 
-           BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+           BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new InflaterInputStream(new FileInputStream(filePath))));
 
            String line = bufferedReader.readLine();
 
-           System.out.println("Here " + line.substring(line.indexOf('\0') + 1));
+           System.out.println(line.substring(line.indexOf("\0") + 1));
 
            while (line != null){
              System.out.println(line);
