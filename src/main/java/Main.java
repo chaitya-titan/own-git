@@ -35,6 +35,8 @@ public class Main {
 
            String filePath = ".git/objects/" + hash1 + "/" + hash2;
 
+           System.out.println(filePath);
+
            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
 
            String line = bufferedReader.readLine();
