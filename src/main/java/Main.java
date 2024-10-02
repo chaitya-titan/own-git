@@ -35,15 +35,13 @@ public class Main {
 
            String filePath = ".git/objects/" + hash1 + "/" + hash2;
 
-           System.out.println(filePath);
-
            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
 
            String line = bufferedReader.readLine();
 
-           System.out.println(line.substring(line.indexOf('\0') + 1));
+           System.out.println("Here " + line.substring(line.indexOf('\0') + 1));
 
-           while ((line = bufferedReader.readLine()) != null){
+           while (line != null){
              System.out.println(line);
            }
 
