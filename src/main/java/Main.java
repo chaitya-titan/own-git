@@ -37,7 +37,9 @@ public class Main {
 
            BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
 
-           String line;
+           String line = bufferedReader.readLine();
+
+           System.out.println(line.substring(line.indexOf('\0') + 1));
 
            while ((line = bufferedReader.readLine()) != null){
              System.out.println(line);
