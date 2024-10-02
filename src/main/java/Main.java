@@ -1,9 +1,8 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 
 public class Main {
-  public static void main(String[] args){
+  public static void main(String[] args) throws IOException {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
@@ -24,6 +23,26 @@ public class Main {
            System.out.println("Initialized git directory");
          } catch (IOException e) {
            throw new RuntimeException(e);
+         }
+       }
+       case "cat-file" -> {
+         String plumbing = args[1];
+         if(plumbing.equals("-p")){
+           String bob_sha = args[2];
+
+           String hash1 = bob_sha.substring(0,2);
+           String hash2 = bob_sha.substring(2);
+
+           String filePath = ".git/objects/" + hash1 + "/" + hash2;
+
+           BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+
+           String line;
+
+           while ((line = bufferedReader.readLine()) != null){
+             System.out.println(line);
+           }
+
          }
        }
        default -> System.out.println("Unknown command: " + command);
