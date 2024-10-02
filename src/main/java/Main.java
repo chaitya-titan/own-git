@@ -42,7 +42,7 @@ public class Main {
 
            System.out.println(line.substring(line.indexOf("\0") + 1));
 
-           while (line != null){
+           while ((line = bufferedReader.readLine()) != null){
              System.out.println(line);
            }
 
