@@ -67,6 +67,8 @@ public class Main {
 
             String hash = DigestUtils.sha1Hex(combinedData);
 
+             System.out.println(hash);
+
              String hash1 = hash.substring(0, 2);
              String hash2 = hash.substring(2);
 
@@ -86,7 +88,7 @@ public class Main {
                  System.out.println("Object stored: " + objectFilePath);
              }
 
-             System.out.println(hash);
+
          }
        }
        default -> System.out.println("Unknown command: " + command);
