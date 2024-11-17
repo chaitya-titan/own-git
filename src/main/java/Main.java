@@ -73,7 +73,7 @@ public class Main {
              byte[] combinedData = concatenate(blobHeaderBytes, fileContent);
 
              String hash = DigestUtils.sha1Hex(combinedData);
-             System.out.println("Hash: " + hash);
+             System.out.println(hash);
 
              String hash1 = hash.substring(0, 2);
              String hash2 = hash.substring(2);
