@@ -83,14 +83,23 @@ public class Main {
 
              if (!Files.exists(objectFilePath)) {
                  try (OutputStream outputStream = Files.newOutputStream(objectFilePath)) {
-                     outputStream.write((combinedData.getBytes()));
+                     outputStream.write(compressData(combinedData.getBytes()));
                  }
              }
-
-
          }
        }
        default -> System.out.println("Unknown command: " + command);
      }
+  }
+
+  public static byte[] compressData(byte[] data){
+      try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+           java.util.zip.GZIPOutputStream gzip = new java.util.zip.GZIPOutputStream(bos)) {
+          gzip.write(data);
+          gzip.finish();
+          return bos.toByteArray();
+      } catch (IOException e) {
+          throw new RuntimeException(e);
+      }
   }
 }
