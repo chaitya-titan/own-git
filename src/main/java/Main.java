@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -55,37 +56,36 @@ public class Main {
        }
        case "hash-object" -> {
          String plumbing = args[1];
-         if(plumbing.equals("-w")) {
-            String fileName = args[2];
+             if (plumbing.equals("-w")) {
+             String fileName = args[2];
+             Path filePath = Paths.get(fileName);
 
-            long fileSize = Files.size(Paths.get(fileName));
-            byte[] fileContent = Files.readAllBytes(Paths.get(fileName));
-            String fileContentString = new String(fileContent);
+             if (!Files.exists(filePath)) {
+                 System.err.println("Error: File does not exist.");
+                 return;
+             }
 
-            String blob_header = "blob " + fileSize + "\0";
+             byte[] fileContent = Files.readAllBytes(filePath);
+             long fileSize = fileContent.length;
 
-            String combinedData = blob_header + fileContentString;
+             String blobHeader = "blob " + fileSize + "\0";
+             byte[] blobHeaderBytes = blobHeader.getBytes();
+             byte[] combinedData = concatenate(blobHeaderBytes, fileContent);
 
-            String hash = DigestUtils.sha1Hex(combinedData);
-
-             System.out.println(hash);
+             String hash = DigestUtils.sha1Hex(combinedData);
+             System.out.println("Hash: " + hash);
 
              String hash1 = hash.substring(0, 2);
              String hash2 = hash.substring(2);
-
-//             String filePath = ".git/objects/" + hash1 + "/" + hash2;
-
              Path objectDir = Paths.get(".git/objects/" + hash1);
              if (!Files.exists(objectDir)) {
                  Files.createDirectories(objectDir);
              }
 
              Path objectFilePath = objectDir.resolve(hash2);
-
              if (!Files.exists(objectFilePath)) {
-                 try (OutputStream outputStream = Files.newOutputStream(objectFilePath)) {
-                     outputStream.write(compressData(combinedData.getBytes()));
-                 }
+                 byte[] compressedData = compressData(combinedData);
+                 Files.write(objectFilePath, compressedData);
              }
          }
        }
@@ -94,13 +94,19 @@ public class Main {
   }
 
   public static byte[] compressData(byte[] data){
-      try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-           GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
-           gzip.write(data); // Write the input data to the GZIP stream
-           gzip.finish();    // Complete the compression
-           return bos.toByteArray(); // Return the compressed data
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      try (DeflaterOutputStream deflater = new DeflaterOutputStream(bos)) {
+          deflater.write(data);
       } catch (IOException e) {
           throw new RuntimeException(e);
       }
+      return bos.toByteArray();
   }
+
+    private static byte[] concatenate(byte[] a, byte[] b) {
+        byte[] result = new byte[a.length + b.length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
 }
