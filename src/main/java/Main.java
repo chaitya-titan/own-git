@@ -1,9 +1,15 @@
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.zip.InflaterInputStream;
 
+
 public class Main {
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     // Uncomment this block to pass the first stage
     //
@@ -49,11 +55,18 @@ public class Main {
          String plumbing = args[1];
          if(plumbing.equals("-w")) {
             String fileName = args[2];
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
 
-            String line = bufferedReader.readLine();
+            long fileSize = Files.size(Paths.get(fileName));
+            byte[] fileContent = Files.readAllBytes(Paths.get(fileName));
+            String fileContentString = new String(fileContent);
 
-           System.out.println(line);
+            String blob_header = "blob " + fileSize + "\0";
+
+            String combinedData = blob_header + fileContentString;
+
+            String hash = DigestUtils.sha1Hex(combinedData);
+
+            System.out.println(hash);
          }
        }
        default -> System.out.println("Unknown command: " + command);
