@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
 
@@ -94,10 +95,10 @@ public class Main {
 
   public static byte[] compressData(byte[] data){
       try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-           java.util.zip.GZIPOutputStream gzip = new java.util.zip.GZIPOutputStream(bos)) {
-          gzip.write(data);
-          gzip.finish();
-          return bos.toByteArray();
+           GZIPOutputStream gzip = new GZIPOutputStream(bos)) {
+           gzip.write(data); // Write the input data to the GZIP stream
+           gzip.finish();    // Complete the compression
+           return bos.toByteArray(); // Return the compressed data
       } catch (IOException e) {
           throw new RuntimeException(e);
       }
