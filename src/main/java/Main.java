@@ -85,7 +85,6 @@ public class Main {
                  try (OutputStream outputStream = Files.newOutputStream(objectFilePath)) {
                      outputStream.write((combinedData.getBytes()));
                  }
-                 System.out.println("Object stored: " + objectFilePath);
              }
 
 
