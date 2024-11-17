@@ -2,6 +2,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -66,7 +67,26 @@ public class Main {
 
             String hash = DigestUtils.sha1Hex(combinedData);
 
-            System.out.println(hash);
+             String hash1 = hash.substring(0, 2);
+             String hash2 = hash.substring(2);
+
+//             String filePath = ".git/objects/" + hash1 + "/" + hash2;
+
+             Path objectDir = Paths.get(".git/objects/" + hash1);
+             if (!Files.exists(objectDir)) {
+                 Files.createDirectories(objectDir);
+             }
+
+             Path objectFilePath = objectDir.resolve(hash2);
+
+             if (!Files.exists(objectFilePath)) {
+                 try (OutputStream outputStream = Files.newOutputStream(objectFilePath)) {
+                     outputStream.write((combinedData.getBytes()));
+                 }
+                 System.out.println("Object stored: " + objectFilePath);
+             }
+
+             System.out.println(hash);
          }
        }
        default -> System.out.println("Unknown command: " + command);

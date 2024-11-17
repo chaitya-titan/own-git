@@ -22,3 +22,6 @@ set -e # Exit early if any commands fail
 # - Edit this to change how your program runs locally
 # - Edit .codecrafters/run.sh to change how your program runs remotely
 exec java -jar /tmp/codecrafters-build-git-java/java_git.jar "$@"
+
+echo "apple pear orange blueberry banana strawberry" > mango.txt
+
